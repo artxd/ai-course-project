@@ -1,2 +1,2 @@
-# ai-course-project
-AI course project. Chatbot + speech synthesis.
+# AI Course Project
+Chatbot + speech synthesis.
