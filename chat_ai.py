@@ -116,7 +116,7 @@ class Sentence:
 
     def getCityName(self): # Otsib linna nime
         global allCities
-        reg = re.match(".*in\s([A-ZÖÄÜÕ](\w|[ -.])+)", self.text) # Algul proovib lihtsalt leida regexiga
+        reg = re.match(".*in\s((\w|[ -.])+)", self.text) # Algul proovib lihtsalt leida regexiga
         if reg:                                                 
             name = reg.group(1)
             name1 = name[:-1]
