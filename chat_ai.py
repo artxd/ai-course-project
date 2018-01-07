@@ -81,8 +81,8 @@ class Memory:
 class Sentence:
     # Võtmesõnad erinevatele parameetritele.
     temperatureKeywords = ("temperature", "warm", "cold", "hot", "chill", "temp", "warmth")
-    humidityKeywords = tuple("humidity")
-    pressureKeywords = tuple("pressure")
+    humidityKeywords = ("humidity",)
+    pressureKeywords = ("pressure",)
     countryKeywords = ("country", "land")
     coordinateKeywords = ("coordinates", "location")
 
