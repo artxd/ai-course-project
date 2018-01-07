@@ -1,6 +1,6 @@
 import recorder
-import re
 from pynput.keyboard import Key, Listener
+import chat_ai
 
 
 def printUser(text):
@@ -16,7 +16,9 @@ def response(text):
         return "Fuck you Ricky!"
 
 
-printComputer("Hello, my name is Bot!")
+#printComputer("Hello, my name is Bot!")
+
+printComputer(chat_ai.getResponse(""))
 
 while True:
     with recorder.AudioRecorder() as rec:
@@ -38,14 +40,16 @@ while True:
 
         text = rec.transcribe()
 
-        if text:
-            printUser(text + "!")
-        else:
-            printUser(text)
+        printUser(text)
 
-        if text.endswith("let's go"):
-            printComputer(response(re.sub("let's go", "", text)))
-        elif not text:
+        if not text:
             printComputer("You didn't say anything")
         else:
-            printComputer("Please end your sentence with a command: 'let's go'")
+            printComputer(chat_ai.getResponse(text))
+
+        # if text.endswith("let's go"):
+        #     printComputer(response(re.sub("let's go", "", text)))
+        # elif not text:
+        #     printComputer("You didn't say anything")
+        # else:
+        #     printComputer("Please end your sentence with a command: 'let's go'")
