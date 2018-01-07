@@ -10,14 +10,6 @@ def printUser(text):
 def printComputer(text):
     print("Computer:", text)
 
-
-def response(text):
-    if "smokes" in text.lower():
-        return "Fuck you Ricky!"
-
-
-#printComputer("Hello, my name is Bot!")
-
 printComputer(chat_ai.getResponse(""))
 
 while True:
@@ -49,10 +41,3 @@ while True:
             break
         else:
             printComputer(chat_ai.getResponse(text))
-
-        # if text.endswith("let's go"):
-        #     printComputer(response(re.sub("let's go", "", text)))
-        # elif not text:
-        #     printComputer("You didn't say anything")
-        # else:
-        #     printComputer("Please end your sentence with a command: 'let's go'")

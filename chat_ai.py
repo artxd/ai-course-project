@@ -23,7 +23,7 @@ class Memory:
         self.askForName = True
         self.attributes = []
         self.city = None
-        self.weatherData = [None, None, None] # ilmad [täna, homme, ülehomme]
+        self.weatherData = [None, None, None] # ilmad [today, tomorrow, day after tomorrow]
         self.time = 0 # 0 täna, 1 homme, 2 ülehomme,
 
     # Kui kasutaja on kirjutanud uue linna, siis laeme uue linna kohta ilma andmed alla.
@@ -108,40 +108,22 @@ class Sentence:
                 self.words[data["root"]]["raw"] = word
 
     def findName(self): # Otsib kasutaja nime lausest, kui ei leia tagastab None
-        # if "mina" in self.words and "ole" in self.words: # Kui lauses on lemmad "mina" ja "ole", siis peaks nimi olema pärast "ole" lemmat.
-        #    index = self.order.index("ole")
-        #    if index != -1 and len(self.order) > index + 1: # Kui pärast "ole" lemmat on midagi siis võetakse see nimeks
-        #        return self.order[index + 1].capitalize()
-        #    reg = re.match(".*([A-ZÖÄÜÕ]\w+).*", self.text)  # Kui pärast "ole" lemmat ühtegi sõna ei ole
-        #    if reg:                                          # siis võetakse nimeks viimane suure algustähega sõne
-        #        name = reg.group(1)
-        #        return name.capitalize()
-        # if len(self.order) == 1: # Kui on ainult üks sõna, siis tehakse see suure algustähega
-        #    n = self.order[0].capitalize() # ning kontrollitakse, et see oleks pärisnimi (== 'H')
-        #    data = getWordLemma(n)
-        #    if data["partofspeech"] == "H":
-        #        return n
         if "name" in self.words and "is" in self.words:
             index = self.order.index("is")
-            if index != -1 and len(self.order) > index + 1:  # Kui pärast "ole" lemmat on midagi siis võetakse see nimeks
+            if index != -1 and len(self.order) > index + 1:
                 return self.order[index + 1].capitalize()
         return None
 
     def getCityName(self): # Otsib linna nime
         global allCities
         reg = re.match(".*in\s([A-ZÖÄÜÕ](\w|[ -.])+)", self.text) # Algul proovib lihtsalt leida regexiga
-        if reg:                                                       # Peab olema 'linnas Suure algustöhega linn' lause lõpus.
+        if reg:                                                 
             name = reg.group(1)
             name1 = name[:-1]
             if name in allCities:
                 return name
             if name1 in allCities:
                 return name1
-
-        # for key, value in self.words.items(): # Lihtsamad linna nimed töötavad ka seesütlevas käändes
-        #     if value["form"] == "sg in":
-        #         if key in allCities:
-        #             return key
         return None
 
     def getAttributes(self): # Tagastab lauses olnud võtmesõnade listi
@@ -188,9 +170,9 @@ def getResponse(text):
         if name is not None:
             memory.userName = name
             memory.askForName = False
-            return "Tere, " + name + "!"
+            return "Hello, " + name + "!"
         else:
-            return "Ma ei saanud nimest aru."
+            return "I didn't get your name."
 
     cityName = sentence.getCityName() # Otsitakse ja kontrollitakse linna nime
     if cityName is not None:
@@ -205,37 +187,35 @@ def getResponse(text):
         memory.time = time
 
     if cityName is None and len(attributes) == 0 and time == -1: # Kui lauses ei ole linna nime, atribuute, ega aega, siis ei saada aru.
-        return "Ma ei saanud aru."
+        return "Sorry, I didn't understand!"
 
     if memory.city is None: # Kui mälust puudub linn, küsitakse linna
-        return "Aga mis linnas?"
+        return "But what city?"
     if len(memory.attributes) == 0: # Kui puuduvad atribuudid siis küsitakse neid, vaikimisi arvaetakse tänast ilma
-        return "Mida täpsemalt teada tahad saada?"
+        return "But about what?"
 
-    # splittedCityName = memory.city.split(" ") # Muudetakse linna nimi sees ütlevasse käändesse
-    # splittedCityName[-1] = getSythWord(splittedCityName[-1], "in")
     cityName = memory.city
     stuffBefore = False
 
     if any(i in memory.attributes for i in ["temp", "pressure", "humidity", "windSpeed", "windDir"]): # See if blokk väljastab ilma andmed
-        times = ["Täna", "Homme", "Ülehomme"]                                               # Seda vaja, et kui ainult riiki tahetakse siis ei oleks "Tartus . Tartu asub Eestis"
+        times = ["Today", "Tomorrow", "Day after tomorrow"]                                               # Seda vaja, et kui ainult riiki tahetakse siis ei oleks "Tartus . Tartu asub Eestis"
 
         if memory.time != 0 or time != -1: # Kui kasutaja täpsustas aega, lisatakse see ka juurde või kui see ei ole täna
             response += times[memory.time] + " "
 
-        response += cityName + " on " # Linna nimi
+        response += "in" + cityName # Linna nimi
         parts = []
         for at in memory.attributes: # Parameetrid
             if at == "temp":
-                parts.append("temperatuur " + memory.getTemperature() + " kraadi")
+                parts.append("temperature is " + memory.getTemperature() + " degrees")
             elif at == "pressure":
-                parts.append("õhurõhk " + memory.getPressure() + "hPa")
+                parts.append("air pressure is " + memory.getPressure() + "hPa")
             elif at == "humidity":
-                parts.append("õhuniiskus " + memory.getHumidity() + "%")
+                parts.append("humidity is " + memory.getHumidity() + "%")
             elif at == "windSpeed":
-                parts.append("tuule kiirus " + memory.getWindSpeed() + " m/s")
+                parts.append("wind speed is " + memory.getWindSpeed() + " m/s")
             elif at == "windDir":
-                parts.append("puhub " + memory.getWindDirection() + " tuul")
+                parts.append("wind blows from " + memory.getWindDirection())
 
         response += ", ".join(parts)
         stuffBefore = True
@@ -243,13 +223,13 @@ def getResponse(text):
     if "country" in memory.attributes: # Riigi väljastus
         if stuffBefore:
             response += ". "
-        response += memory.city + " asub " + memory.getCountry()
+        response += memory.city + " is located in " + memory.getCountry()
 
     if "coordinates" in memory.attributes: # Koordinaatide väljastus
         if stuffBefore:
             response += ". "
         lon, lat = memory.getCoordinates()
-        response += memory.city + " koordinaadid on " + str(lon) + " pikkuskraadi ja " + str(lat) + " laiuskraadi"
+        response += memory.city + " coordinates are " + str(lon) + " longitude and " + str(lat) + " latitude"
 
     return response + "."
 
