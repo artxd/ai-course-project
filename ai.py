@@ -1,7 +1,12 @@
 import recorder
 from pynput.keyboard import Key, Listener
 import chat_ai
-import pyttsx3
+
+hasVoice = True
+try:
+    import pyttsx3
+except ModuleNotFoundError:
+    hasVoice = False
 
 
 def printUser(text):
@@ -10,12 +15,16 @@ def printUser(text):
 
 def printComputer(text):
     global engine
-    engine.say(text)
     print("Computer:", text)
-    engine.runAndWait()
+    if engine:
+        engine.say(text)
+        engine.runAndWait()
 
 
-engine = pyttsx3.init()
+if hasVoice:
+    engine = pyttsx3.init()
+else:
+    engine = None
 printComputer(chat_ai.getResponse(""))
 
 while True:
