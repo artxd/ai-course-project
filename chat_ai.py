@@ -263,4 +263,4 @@ memory = Memory()
 with open("cities.txt", encoding="utf8") as f:
     allCities = f.readlines()
 
-allCities = [x.strip() for x in allCities]
+allCities = [x.strip().lower() for x in allCities]
