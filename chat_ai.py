@@ -81,8 +81,8 @@ class Memory:
 class Sentence:
     # Võtmesõnad erinevatele parameetritele.
     temperatureKeywords = ("temperature", "warm", "cold", "hot", "chill", "temp", "warmth")
-    humidityKeywords = ("humidity")
-    pressureKeywords = ("pressure")
+    humidityKeywords = tuple("humidity")
+    pressureKeywords = tuple("pressure")
     countryKeywords = ("country", "land")
     coordinateKeywords = ("coordinates", "location")
 
@@ -128,20 +128,21 @@ class Sentence:
 
     def getAttributes(self): # Tagastab lauses olnud võtmesõnade listi
         keywords = []
-        if any(i in self.text for i in self.humidityKeywords):
+        words = self.text.split(" ")
+        if any(i in words for i in self.humidityKeywords):
             keywords.append("humidity")
-        if any(i in self.text for i in self.temperatureKeywords):
+        if any(i in words for i in self.temperatureKeywords):
             keywords.append("temp")
-        if any(i in self.text for i in self.pressureKeywords):
+        if any(i in words for i in self.pressureKeywords):
             keywords.append("pressure")
-        if "wind" in self.text:
-            if "speed" in self.text:
+        if "wind" in words:
+            if "speed" in words:
                 keywords.append("windSpeed")
-            if "direction" in self.text:
+            if "direction" in words:
                 keywords.append("windDir")
-        if any(i in self.text for i in self.countryKeywords):
+        if any(i in words for i in self.countryKeywords):
             keywords.append("country")
-        if any(i in self.text for i in self.coordinateKeywords):
+        if any(i in words for i in self.coordinateKeywords):
             keywords.append("coordinates")
         return keywords
 
