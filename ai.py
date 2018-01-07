@@ -44,6 +44,9 @@ while True:
 
         if not text:
             printComputer("You didn't say anything")
+        elif "bye" == text.lower():
+            printComputer("Bye.")
+            break
         else:
             printComputer(chat_ai.getResponse(text))
 

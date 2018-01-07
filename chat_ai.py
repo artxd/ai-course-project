@@ -89,7 +89,7 @@ class Sentence:
     def __init__(self, text):
         self.order = []
         self.words = dict()
-        self.text = text
+        self.text = text.lower()
         self.__preprocess()
 
     # Töötleb kasutaja sisendit
@@ -146,30 +146,30 @@ class Sentence:
 
     def getAttributes(self): # Tagastab lauses olnud võtmesõnade listi
         keywords = []
-        if any(i in self.words for i in self.humidityKeywords):
+        if any(i in self.text for i in self.humidityKeywords):
             keywords.append("humidity")
-        if any(i in self.words for i in self.temperatureKeywords):
+        if any(i in self.text for i in self.temperatureKeywords):
             keywords.append("temp")
-        if any(i in self.words for i in self.pressureKeywords):
+        if any(i in self.text for i in self.pressureKeywords):
             keywords.append("pressure")
-        if "wind" in self.words:
-            if "speed" in self.words:
+        if "wind" in self.text:
+            if "speed" in self.text:
                 keywords.append("windSpeed")
-            if "direction" in self.words:
+            if "direction" in self.text:
                 keywords.append("windDir")
-        if any(i in self.words for i in self.countryKeywords):
+        if any(i in self.text for i in self.countryKeywords):
             keywords.append("country")
-        if any(i in self.words for i in self.coordinateKeywords):
+        if any(i in self.text for i in self.coordinateKeywords):
             keywords.append("coordinates")
         return keywords
 
     def getTime(self): # Tagastab aja, kui lauses oli seda mainitud
-        if "tomorrow" in self.words:
-            if "after" in self.words:
+        if "tomorrow" in self.text:
+            if "after" in self.text:
                 return 2
             else:
                 return 1
-        if "today" in self.words:
+        if "today" in self.text:
             return 0
         return -1
 
