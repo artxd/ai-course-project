@@ -204,33 +204,33 @@ def getResponse(text):
         if memory.time != 0 or time != -1: # Kui kasutaja täpsustas aega, lisatakse see ka juurde või kui see ei ole täna
             response += times[memory.time] + " "
 
-        response += "in" + cityName # Linna nimi
+        response += "In " + cityName.capitalize() # Linna nimi
         parts = []
         for at in memory.attributes: # Parameetrid
             if at == "temp":
-                parts.append("temperature is " + memory.getTemperature() + " degrees")
+                parts.append(" temperature is " + memory.getTemperature() + " degrees")
             elif at == "pressure":
-                parts.append("air pressure is " + memory.getPressure() + "hPa")
+                parts.append(" air pressure is " + memory.getPressure() + "hPa")
             elif at == "humidity":
-                parts.append("humidity is " + memory.getHumidity() + "%")
+                parts.append(" humidity is " + memory.getHumidity() + "%")
             elif at == "windSpeed":
-                parts.append("wind speed is " + memory.getWindSpeed() + " m/s")
+                parts.append(" wind speed is " + memory.getWindSpeed() + " m/s")
             elif at == "windDir":
-                parts.append("wind blows from " + memory.getWindDirection())
+                parts.append(" wind blows from " + memory.getWindDirection())
 
-        response += ", ".join(parts)
+        response += ",".join(parts)
         stuffBefore = True
 
     if "country" in memory.attributes: # Riigi väljastus
         if stuffBefore:
             response += ". "
-        response += memory.city + " is located in " + memory.getCountry()
+        response += memory.city.capitalize() + " is located in " + memory.getCountry().capitalize()
 
     if "coordinates" in memory.attributes: # Koordinaatide väljastus
         if stuffBefore:
             response += ". "
         lon, lat = memory.getCoordinates()
-        response += memory.city + " coordinates are " + str(lon) + " longitude and " + str(lat) + " latitude"
+        response += memory.city.capitalize() + " coordinates are " + str(lon) + " longitude and " + str(lat) + " latitude"
 
     return response + "."
 
