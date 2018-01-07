@@ -5,9 +5,10 @@ Chatbot + speech synthesis.
 ## Requirements
 
 ### Dependencies
-`pip install google-cloud-speech`
-`pip install pyaudio`
-`pip install pynput`
+* `pip install google-cloud-speech`
+* `pip install pyaudio`
+* `pip install pynput`
+* `pip install pyttsx3`
 
 ### Google Cloud
 Required Google cloud account with google speech api enabled

@@ -1,6 +1,7 @@
 import recorder
 from pynput.keyboard import Key, Listener
 import chat_ai
+import pyttsx3
 
 
 def printUser(text):
@@ -8,8 +9,13 @@ def printUser(text):
 
 
 def printComputer(text):
+    global engine
+    engine.say(text)
     print("Computer:", text)
+    engine.runAndWait()
 
+
+engine = pyttsx3.init()
 printComputer(chat_ai.getResponse(""))
 
 while True:
